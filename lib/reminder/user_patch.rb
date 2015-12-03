@@ -5,7 +5,7 @@ module Reminder
       base.class_eval do
         # Same as typing in the class.
         unloadable # Send unloadable so it will not be unloaded in development.
-        safe_attributes 'reminder_notification'
+        safe_attributes 'reminder_notification', 'slack_username'
 
         def self.valid_reminder_notification?(value)
           value =~ /^(\A(\d+[\s,]*)+\z)|(\s)$/

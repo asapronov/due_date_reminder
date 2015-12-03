@@ -5,4 +5,6 @@ en:
   reminder_mail_subject: "Reminder: You have issues with due dates"
   reminder_mail_body: "Issues assigned to you that have due dates"
   reminder_days_overdue: "%{days} day(s) overdue"
-
+  slack_webhook_url: "Slack webhook url"
+  field_slack_username: "Slack username"
+  show_tasks_link: "Show tasks"

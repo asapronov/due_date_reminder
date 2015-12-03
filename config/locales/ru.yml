@@ -5,4 +5,6 @@ ru:
   reminder_mail_subject: "Reminder: У вас есть задачи с истекающим сроком выполнения"
   reminder_mail_body: "Задачи, назначенные вам, у которых есть срок выполнения"
   reminder_days_overdue: "Просрочена на следующее кол-во дней - %{days}"
-
+  slack_webhook_url: "Slack webhook url"
+  field_slack_username: "Slack username"
+  show_tasks_link: "Посмотреть задачи"

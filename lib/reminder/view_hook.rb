@@ -20,5 +20,11 @@ module Reminder
       </p>
       SRC
     end
+
+    def view_users_form(context={})
+      <<-SRC
+        <p>#{ context[:form].text_field :slack_username }</p>
+      SRC
+    end
   end
 end
