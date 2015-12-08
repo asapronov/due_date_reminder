@@ -49,7 +49,7 @@ class SlackClient
       if issue.overdue?
         caption = "\>`#{I18n.t(:reminder_days_overdue, :days => issue.days_before_due_date.abs)}` - #{name}"
       else
-        caption = "\>#{name} (#{I18n.t(:field_due_date)}: #{issue.due_date})"
+        caption = "\>#{name} (#{I18n.t(:field_due_date)}: `#{issue.due_date}`)"
       end
       caption
     end
