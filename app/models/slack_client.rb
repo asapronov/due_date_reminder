@@ -3,6 +3,7 @@ class SlackClient
 
   def initialize(webhook_url)
     @webhook_url = webhook_url
+    @client = HTTPClient.new
   end
 
   def send_due_date_notifications
@@ -25,13 +26,11 @@ class SlackClient
 #{ prepare_projects_messages(projects) }
 <#{ issues_url }|#{I18n.t(:show_tasks_link)}>
     MSG
-		params = {
-			:text => message,
-      :channel => user.slack_username, # it should be with @
-      :mrkdwn => true
-		}
-		client = HTTPClient.new
-		client.post @webhook_url, {:payload => params.to_json}
+		send_to_slack(
+          text: message,
+          channel: user.slack_username, # it should be with @
+          mrkdwn: true
+        )
   end
 
   def send_issue_added_notification(issue)
@@ -43,18 +42,38 @@ class SlackClient
                     			:host => Setting.host_name)
     message = <<-MSG
 #{ I18n.t(:text_issue_added, :id => "##{issue.id}", :author => issue.author) }
-<#{ issue_url }|#{I18n.t(:button_view)}>
+#{I18n.t(:field_due_date)}: `#{issue.due_date}`. <#{ issue_url }|#{I18n.t(:button_submit)}>
     MSG
-		params = {
-			:text => message,
-      :channel => user.slack_username, # it should be with @
-      :mrkdwn => true
-		}
-		client = HTTPClient.new
-		client.post @webhook_url, {:payload => params.to_json}
+		send_to_slack(
+          text: message,
+          channel: user.slack_username, # it should be with @
+          mrkdwn: true
+        )
+  end
+
+  def send_issue_accepted_notification(issue)
+    user = issue.author
+    return if user.slack_username.blank?
+    set_language_if_valid user.language
+    issue_url = Rails.application.routes.url_for(:controller => 'issues', :action => 'show',
+                          :id => issue.id,
+                    			:host => Setting.host_name)
+    message = <<-MSG
+#{ I18n.t(:text_issue_accepted, :id => "##{issue.id}", :assigned_to => issue.assigned_to) }
+#{I18n.t(:field_due_date)}: `#{issue.due_date}`. <#{ issue_url }|#{I18n.t(:button_view)}>
+    MSG
+		send_to_slack(
+          text: message,
+          channel: user.slack_username, # it should be with @
+          mrkdwn: true
+        )
   end
 
   private
+
+  def send_to_slack(params)
+    @client.post @webhook_url, {:payload => params.to_json}
+  end
 
   def prepare_projects_messages(projects)
     projects_messages = projects.map do |project, issues|

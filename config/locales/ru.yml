@@ -8,3 +8,4 @@ ru:
   slack_webhook_url: "Slack webhook url"
   field_slack_username: "Slack username"
   show_tasks_link: "Посмотреть задачи"
+  text_issue_accepted: "Задача %{id} принята (%{assigned_to})."
