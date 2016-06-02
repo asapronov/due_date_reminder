@@ -34,6 +34,26 @@ class SlackClient
 		client.post @webhook_url, {:payload => params.to_json}
   end
 
+  def send_issue_added_notification(issue)
+    user = issue.assigned_to
+    return if user.slack_username.blank?
+    set_language_if_valid user.language
+    issue_url = Rails.application.routes.url_for(:controller => 'issues', :action => 'show',
+                          :id => issue.id,
+                    			:host => Setting.host_name)
+    message = <<-MSG
+#{ I18n.t(:text_issue_added, :id => "##{issue.id}", :author => issue.author) }
+<#{ issue_url }|#{I18n.t(:button_view)}>
+    MSG
+		params = {
+			:text => message,
+      :channel => user.slack_username, # it should be with @
+      :mrkdwn => true
+		}
+		client = HTTPClient.new
+		client.post @webhook_url, {:payload => params.to_json}
+  end
+
   private
 
   def prepare_projects_messages(projects)
