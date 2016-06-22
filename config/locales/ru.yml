@@ -9,3 +9,4 @@ ru:
   field_slack_username: "Slack username"
   show_tasks_link: "Посмотреть задачи"
   text_issue_accepted: "Задача %{id} принята (%{assigned_to})."
+  text_issue_completed: "Задача %{id} завершена (%{assigned_to})."

@@ -52,6 +52,14 @@ class SlackClient
   end
 
   def send_issue_accepted_notification(issue)
+    send_issue_notification(issue, :text_issue_accepted)
+  end
+
+  def send_issue_completed_notification(issue)
+    send_issue_notification(issue, :text_issue_completed)
+  end
+
+  def send_issue_notification(issue, i18n_key)
     user = issue.author
     return if user.slack_username.blank?
     set_language_if_valid user.language
@@ -59,7 +67,7 @@ class SlackClient
                           :id => issue.id,
                     			:host => Setting.host_name)
     message = <<-MSG
-#{ I18n.t(:text_issue_accepted, :id => "##{issue.id}", :assigned_to => issue.assigned_to) }
+#{ I18n.t(i18n_key, :id => "##{issue.id}", :assigned_to => issue.assigned_to) }
 #{I18n.t(:field_due_date)}: `#{issue.due_date}`. <#{ issue_url }|#{I18n.t(:button_view)}>
     MSG
 		send_to_slack(

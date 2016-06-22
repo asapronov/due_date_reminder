@@ -3,7 +3,8 @@ module Reminder
     def self.included(base)
       base.send(:include, InstanceMethods)
       base.after_create :send_slack_notification
-      base.after_update :send_manager_slack_notification, if: :issue_accepted?
+      base.after_update :send_manager_slack_notification_about_accepted_task, if: :issue_accepted?
+      base.after_update :send_manager_slack_notification_about_completed_task, if: :issue_completed?
     end
   end
 
@@ -29,8 +30,16 @@ module Reminder
       status.name == 'Принята'
     end
 
-    def send_manager_slack_notification
+    def issue_completed?
+      status.name == 'Завершена'
+    end
+
+    def send_manager_slack_notification_about_accepted_task
       SlackClient.new(Setting.plugin_due_date_reminder['slack_webhook_url']).send_issue_accepted_notification(self)
+    end
+
+    def send_manager_slack_notification_about_completed_task
+      SlackClient.new(Setting.plugin_due_date_reminder['slack_webhook_url']).send_issue_completed_notification(self)
     end
 
   end
