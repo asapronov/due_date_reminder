@@ -42,6 +42,7 @@ class SlackClient
                     			:host => Setting.host_name)
     message = <<-MSG
 #{ I18n.t(:text_issue_added, :id => "##{issue.id}", :author => issue.author) }
+#{I18n.t(:field_start_date)}: `#{issue.start_date}`.
 #{I18n.t(:field_due_date)}: `#{issue.due_date}`. <#{ issue_url }|#{I18n.t(:button_submit)}>
     MSG
 		send_to_slack(
@@ -68,6 +69,8 @@ class SlackClient
                     			:host => Setting.host_name)
     message = <<-MSG
 #{ I18n.t(i18n_key, :id => "##{issue.id}", :assigned_to => issue.assigned_to) }
+#{I18n.t(:field_estimated_hours)}: `#{issue.estimated_hours.to_s}`.
+#{I18n.t(:field_start_date)}: `#{issue.start_date}`.
 #{I18n.t(:field_due_date)}: `#{issue.due_date}`. <#{ issue_url }|#{I18n.t(:button_view)}>
     MSG
 		send_to_slack(
